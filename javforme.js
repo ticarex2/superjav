@@ -3,8 +3,29 @@ const cheerio = require("cheerio");
 const fs = require("fs");
 
 module.exports = {
-    keepGettingVideos
+    keepGettingVideos,
+    updateSavedVideos
 };
+
+function updateSavedVideos() {
+    const rawVideosFile = fs.readFileSync("javforme-videos.json", {
+        encoding: "utf8"
+    });
+    const videos = JSON.parse(rawVideosFile);
+
+    for (const video of videos) {
+        const regex = /([a-z]+[0-9]*-[0-9]+)/i;
+        const res = regex.exec(video.name);
+
+        const javid = res[0];
+        const newName = video.name.replace(javid, "").trim();
+
+        video.javid = javid;
+        video.name = newName;
+    }
+
+    saveVideos(videos);
+}
 
 async function keepGettingVideos() {
     let index = 0;
@@ -41,7 +62,11 @@ async function keepGettingVideos() {
 
     console.log(`${totalVideos.length} vídeos coletados até a página ${index}`);
 
-    fs.writeFileSync("javforme-videos.json", JSON.stringify(totalVideos), {
+    saveVideos(totalVideos);
+}
+
+function saveVideos(videos) {
+    fs.writeFileSync("javforme-videos.json", JSON.stringify(videos), {
         encoding: "utf8"
     });
 }

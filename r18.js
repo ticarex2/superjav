@@ -2,13 +2,9 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const fs = require("fs");
 
-main();
-
-async function main() {
-    const videos = await getAllVideos(1);
-
-    console.log(videos);
-}
+module.exports = {
+    getAllVideos
+};
 
 async function getAllVideos(startingPage = 1) {
     const videos = [];

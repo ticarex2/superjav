@@ -17,7 +17,7 @@ function searchButton() {
 function goTo(el, service) {
     const item = el.parentElement.parentElement;
     const name = item.querySelector(".name").innerText;
-    const id = name.split(" ")[0];
+    const id = item.dataset.javid;
 
     let url = "";
     switch (service) {
@@ -94,7 +94,8 @@ function renderResults() {
 
     for (const result of results.slice(g.page * PAGE_SIZE, g.page * PAGE_SIZE + PAGE_SIZE)) {
         $results.innerHTML += `
-                    <div class="item">
+                    <div class="item" data-javid="${result.javid}">
+                        <div class="javid">[${result.javid}]</div>
                         <div class="name">${result.name}</div>
                         <div class="score">search score: ${result.score}</div>
                         <div class="image">
@@ -161,20 +162,10 @@ function includesWord(haystack, word) {
 }
 
 async function getVideos() {
-    let res = await fetch("javforme-videos.json");
-    let json = await res.json();
+    let res = await fetch("videos.json");
+    let videos = await res.json();
 
-    const javformeVideos = json;
-
-    res = await fetch("r18-videos.json");
-    json = await res.json();
-
-    const r18Videos = json;
-
-    return [
-        ...javformeVideos,
-        ...r18Videos
-    ];
+    return videos;
 }
 
 function shuffle(array) {
