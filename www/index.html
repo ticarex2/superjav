@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <div id="search-bar">
+        <div id="search">
+            <form onsubmit="searchButton(); return false;">
+                <input type="text" id="term">
+                <input type="submit" value="Search"></input>
+            </form>
+        </div>
+        <div id="pages">
+            <button id="prev-page" onclick="prevPage()" disabled>Prev page</button>
+            page <span id="current-page"></span> (<span id="results-num">0</span> results)
+            <button id="next-page" onclick="nextPage()" disabled>Next page</button>
+        </div>
+    </div>
+    <div id="results"></div>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
