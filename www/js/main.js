@@ -14,6 +14,10 @@ function searchButton() {
     searchVideo(term);
 }
 
+function enableInterface() {
+    document.querySelector("#loading").remove();
+}
+
 function goTo(el, service) {
     const item = el.parentElement.parentElement;
     const name = item.querySelector(".name").innerText;
@@ -39,6 +43,7 @@ async function main() {
 
 async function setup() {
     g.videos = await getVideos();
+    enableInterface();
 }
 
 function searchVideo(term) {
@@ -92,9 +97,23 @@ function renderResults() {
     const $results = document.getElementById("results");
     $results.innerHTML = "";
 
-    for (const result of results.slice(g.page * PAGE_SIZE, g.page * PAGE_SIZE + PAGE_SIZE)) {
+    let topScore = 0;
+
+    for (const result of results) {
+        if (result.score > topScore) topScore = result.score;
+    }
+
+    const slice = results.slice(g.page * PAGE_SIZE, g.page * PAGE_SIZE + PAGE_SIZE);
+
+    for (const result of slice) {
+        let itemClass = "item";
+
+        if (result.score === topScore) {
+            itemClass = "item top-score";
+        }
+
         $results.innerHTML += `
-                    <div class="item" data-javid="${result.javid}">
+                    <div class="${itemClass}" data-javid="${result.javid}">
                         <div class="javid">[${result.javid}]</div>
                         <div class="name">${result.name}</div>
                         <div class="score">search score: ${result.score}</div>

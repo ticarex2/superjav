@@ -6,8 +6,7 @@ const fs = require("fs");
 main();
 
 async function main() {
-    // javforme.updateSavedVideos();
-    // await javforme.keepGettingVideos();
+    // await Promise.all([javforme.keepGettingVideos(), r18.getAllVideos()]);
 
     const javformeVideos = readVideosFile("javforme-videos.json");
     const r18Videos = readVideosFile("r18-videos.json");
@@ -15,12 +14,9 @@ async function main() {
     normalizeJavids(javformeVideos);
     normalizeJavids(r18Videos);
 
-    saveVideos("javforme-videos.json", javformeVideos);
-    saveVideos("r18-videos.json", r18Videos);
-
     const allVideos = joinVideos(javformeVideos, r18Videos);
 
-    saveVideos("videos.json", allVideos);
+    saveVideos("www/videos.json", allVideos);
 }
 
 function readVideosFile(filename) {

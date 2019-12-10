@@ -6,6 +6,10 @@ module.exports = {
     getAllVideos
 };
 
+function log(msg) {
+    console.log(`[r18] ${msg}`);
+}
+
 async function getAllVideos(startingPage = 1) {
     const videos = [];
 
@@ -13,15 +17,15 @@ async function getAllVideos(startingPage = 1) {
 
     while (true) {
         try {
-            console.log(`Baixando página ${currentPage}...`);
+            log(`Baixando página ${currentPage}...`);
 
             const page = await getPage(currentPage);
 
             videos.push(...page.videos);
 
-            console.log(`Página ${currentPage} baixada`);
-            console.log(`Adicionado ${page.videos.length} vídeos`);
-            console.log(`Total de vídeos: ${videos.length}`);
+            log(`Página ${currentPage} baixada`);
+            log(`Adicionado ${page.videos.length} vídeos`);
+            log(`Total de vídeos: ${videos.length}`);
 
             if (!page.hasNextPage)
                 break;
@@ -33,13 +37,13 @@ async function getAllVideos(startingPage = 1) {
         }
     }
 
-    console.log(`Terminou de baixar os vídeos!!!`);
-    console.log(`Baixados ${videos.length} vídeos no total`);
-    console.log(`Da página ${startingPage} até a página ${currentPage}`);
+    log(`Terminou de baixar os vídeos!!!`);
+    log(`Baixados ${videos.length} vídeos no total`);
+    log(`Da página ${startingPage} até a página ${currentPage}`);
 
     saveVideos(videos);
 
-    console.log(`Vídeos salvos!`);
+    log(`Vídeos salvos!`);
 
     return videos;
 }

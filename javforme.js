@@ -3,28 +3,11 @@ const cheerio = require("cheerio");
 const fs = require("fs");
 
 module.exports = {
-    keepGettingVideos,
-    updateSavedVideos
+    keepGettingVideos
 };
 
-function updateSavedVideos() {
-    const rawVideosFile = fs.readFileSync("javforme-videos.json", {
-        encoding: "utf8"
-    });
-    const videos = JSON.parse(rawVideosFile);
-
-    for (const video of videos) {
-        const regex = /([a-z]+[0-9]*-[0-9]+)/i;
-        const res = regex.exec(video.name);
-
-        const javid = res[0];
-        const newName = video.name.replace(javid, "").trim();
-
-        video.javid = javid;
-        video.name = newName;
-    }
-
-    saveVideos(videos);
+function log(msg) {
+    console.log(`[javforme] ${msg}`);
 }
 
 async function keepGettingVideos() {
@@ -42,12 +25,12 @@ async function keepGettingVideos() {
 
             totalVideos.push(...videos);
 
-            console.log(`adicionado ${videos.length} videos da página ${index}`);
-            console.log(`${totalVideos.length} videos baixados até o momento`);
+            log(`adicionado ${videos.length} videos da página ${index}`);
+            log(`${totalVideos.length} videos baixados até o momento`);
 
             numTry = 0;
         } catch (e) {
-            console.error(`Erro ao pegar vídeos da página ${index}`);
+            console.error(`[javforme] Erro ao pegar vídeos da página ${index}`);
             numTry++;
 
             if (numTry > 3) {
@@ -60,7 +43,7 @@ async function keepGettingVideos() {
         }
     }
 
-    console.log(`${totalVideos.length} vídeos coletados até a página ${index}`);
+    log(`${totalVideos.length} vídeos coletados até a página ${index}`);
 
     saveVideos(totalVideos);
 }
@@ -87,6 +70,16 @@ function parseHTML(html) {
             name: $(this).attr("alt"),
             image: $(this).attr("src")
         };
+
+        const regex = /([a-z]+[0-9]*-[0-9]+)/i;
+        const res = regex.exec(video.name);
+
+        const javid = res[0];
+        const newName = video.name.replace(javid, "").trim();
+
+        video.javid = javid;
+        video.name = newName;
+
         videos.push(video);
     });
 
